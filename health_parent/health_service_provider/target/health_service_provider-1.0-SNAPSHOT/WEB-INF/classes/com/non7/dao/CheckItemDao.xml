@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.non7.dao.CheckItemDao">
+    <insert id="add" parameterType="com.non7.pojo.CheckItem">
+        insert into t_checkitem(code,name,sex,age,price,type,remark,attention)
+        values
+            (#{code},#{name},#{sex},#{age},#{price},#{type},#{remark},#{attention});
+    </insert>
+
+    <select id="selectByCondition" parameterType="String" resultType="com.non7.pojo.CheckItem">
+        select * from t_checkitem
+    <if test="value!=null and value.length>0">
+        where code=#{value} or name=#{value}
+    </if>
+    </select>
+<!--根据检查项id统计数据量-->
+    <select id="fnidCountByCheckItemId" parameterType="Integer" resultType="Long">
+        select count(*) from t_checkgroup_checkitem where checkitem_id=#{id};
+    </select>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from t_checkitem where id=#{id}
+    </delete>
+
+    <update id="edit" parameterType="com.non7.pojo.CheckItem">
+        update t_checkitem
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </set>
+            where id=#{id}
+    </update>
+
+    <select id="findById" parameterType="Integer" resultType="com.non7.pojo.CheckItem">
+        select * from t_checkitem where id=#{id}
+    </select>
+
+    <select id="findAll" resultType="com.non7.pojo.CheckItem">
+        select * from t_checkitem;
+    </select>
+
+    <select id="findCheckItemById" parameterType="Integer" resultType="com.non7.pojo.CheckItem">
+        select * from t_checkitem where id in (select checkitem_id from t_checkgroup_checkitem where checkgroup_id=#{id})
+    </select>
+
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.non7.dao.SetmealDao">
+    <resultMap id="baseResultMap" type="com.non7.pojo.Setmeal">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="helpCode" property="helpCode"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="price" property="price"/>
+        <result column="remark" property="remark"/>
+        <result column="attention" property="attention"/>
+        <result column="img" property="img"/>
+    </resultMap>
+    <resultMap id="findByIdResultMap" type="com.non7.pojo.Setmeal" extends="baseResultMap">
+        <!--    多对多映射-->
+        <collection
+                property="checkGroups"
+                ofType="com.non7.pojo.CheckGroup"
+                select="com.non7.dao.CheckGroupDao.findCheckGroupById"
+                column="id"></collection>
+
+    </resultMap>
+    <!--    插入套餐数据-->
+    <insert id="add" parameterType="com.non7.pojo.Setmeal">
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">select LAST_INSERT_ID()</selectKey>
+        insert into t_setmeal
+        (code,name,sex,age,helpCode,price,remark,attention,img)
+        values
+        (#{code},#{name},#{sex},#{age},#{helpCode},#{price},#{remark},#{attention},#{img})
+    </insert>
+    <!--设置套餐和检查组和检查项多对多关系-->
+    <insert id="setSetmealAndCheckGroup" parameterType="map">
+        insert into t_setmeal_checkgroup
+            (setmeal_id, checkgroup_id)
+        values (#{setmeal_id}, #{checkgroup_id})
+    </insert>
+
+    <select id="findByCondition" parameterType="String" resultType="com.non7.pojo.Setmeal">
+        select * from t_setmeal
+        <if test="value!=null and value!='' and value.length>0">
+            where code=#{value} or name=#{value} or helpCode=#{value}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="com.non7.pojo.Setmeal">
+        select *
+        from t_setmeal;
+    </select>
+    <!--根据套餐ID查询套餐详情（包含套餐基本信息、检查组信息、检查项信息-->
+    <select id="findById" parameterType="Integer" resultMap="findByIdResultMap">
+        select *
+        from t_setmeal
+        where id = #{id}
+    </select>
+
+    <select id="findCheckSetmealIdsByCheckgroupId" parameterType="Integer" resultType="Integer">
+        select checkgroup_id
+        from t_setmeal_checkgroup
+        where setmeal_id = #{id}
+    </select>
+    <select id="findCountByCheckGroupId" parameterType="Integer" resultType="Long">
+        select count(*)
+        from t_setmeal_checkgroup
+        where checkitem_id = ${id}
+    </select>
+    <delete id="deleteById" parameterType="Integer">
+        delete
+        from t_setmeal
+        where id = #{id}
+    </delete>
+    <update id="edit" parameterType="com.non7.pojo.Setmeal">
+        update t_setmeal
+        <set>
+            <if test="name!=null">name=#{name}</if>
+            <if test="sex!=null">sex=#{sex}</if>
+            <if test="age!=null">age=#{age}</if>
+            <if test="helpCode!=null">helpCode=#{helpCode}</if>
+            <if test="price!=null">price=#{price}</if>
+            <if test="remark!=null">remark=#{remark}</if>
+            <if test="attention!=null">attention=#{attention}</if>
+            <if test="img!=null">img=#{img}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteAssociation" parameterType="Integer">
+        delete
+        from t_setmeal_checkgroup
+        where setmeal_id = #{id}
+    </delete>
+
+    <select id="findSetmealCount" resultType="Map">
+        select a.name,count(b.id) value from t_setmeal a,t_order b where a.setmeal_id=b.id group by a.name;
+    </select>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.non7.dao.UserDao">
+<!--     public User findByUserName(String username);-->
+    <select id="findByUserName"  parameterType="String" resultType="com.non7.pojo.User">
+        select * from t_user where username=#{username}
+    </select>
+
+</mapper>
