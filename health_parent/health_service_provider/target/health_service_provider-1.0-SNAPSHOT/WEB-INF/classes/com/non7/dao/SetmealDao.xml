@@ -94,6 +94,6 @@
     </delete>
 
     <select id="findSetmealCount" resultType="Map">
-        select a.name,count(b.id) value from t_setmeal a,t_order b where a.setmeal_id=b.id group by a.name;
+        select a.name,count(b.id) value from t_setmeal a,t_order b where b.setmeal_id=a.id group by a.name;
     </select>
 </mapper>

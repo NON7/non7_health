@@ -16,5 +16,5 @@ public interface OrderDao {
     public Integer findOrderCountAfterDate(String date);
     public Integer findVisitsCountByDate(String date);
     public Integer findVisitsCountAfterDate(String date);
-//    public List<Map> findHotSetmeal();//暂时没用
+   public List<Map> findHotSetmeal();//暂时没用
 }

@@ -10,6 +10,7 @@ com\non7\service\impl\OrderSettingServiceImpl.class
 com\non7\dao\SetmealDao.class
 com\non7\service\impl\CheckItemServiceImpl.class
 com\non7\service\impl\CheckGroupServiceImpl.class
+com\non7\service\impl\ReportServiceImpl.class
 com\non7\dao\CheckGroupDao.class
 com\non7\dao\RoleDao.class
 com\non7\dao\PermissionDao.class
